@@ -1,0 +1,14 @@
+{
+    "/": "Get all APIs path",
+
+    "/signup": "User Registration",
+    "/signin": "User Login",
+    "/signout": "User Logout",
+    
+    "/users":  "Get All users",
+    "/users/:userId": "Get user by id",
+    "users/user/:userId": "/Update/Delete user",
+    
+    "/post/": "get all posts",
+    "/post/add/:userId": "Add user"
+}
