@@ -7,7 +7,7 @@ exports.signup = async (req, res) => {
     try {
         let user = await User.findOne({email: req.body.email});
         if (user) {
-            return res.status(403).json({message: "Email already exists!"});
+            return res.status(400).json({error: "Email already exists!"});
         }
         user = await User(req.body);
         await user.save();
@@ -25,13 +25,13 @@ exports.signin = (req, res) => {
     User.findOne({email}, (err, user) => {
         if (err || !user) {
             return res.status(401).json({
-                message: 'User not found'
+                error: 'User not found'
             });
         }
 
         // if user found match the password (Authenticate)
         if (!user.authenticate(password)) {
-            return res.status(401).json({message: 'Invalid email or password!'})
+            return res.status(401).json({error: 'Invalid email or password!'})
         }
 
         // Create jsontoken and send response

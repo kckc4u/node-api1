@@ -22,6 +22,7 @@ var ownMiddleware = (req, res, next) => {
     console.log('Middleware applied.');
     next();
 }
+
 app.use(ownMiddleware);
 app.use(expressValidator())
 app.use(bodyParser.json());
@@ -42,7 +43,7 @@ app.get('/', (req, res) => {
 app.use(function(err, req, res, next) {
     if (err.name === "UnauthorizedError") {
         return res.status(403).json({
-            message: "You are not loggedin."
+            error: "You are not loggedin."
         })
     }
 
