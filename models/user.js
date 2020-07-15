@@ -25,7 +25,11 @@ let userSchema = new mongoose.Schema({
         default: Date.now
     },
 
-    updated: Date
+    updated: Date,
+    photo: {
+        data: Buffer,
+        contentType: String,
+    }
 });
 
 // virtual field

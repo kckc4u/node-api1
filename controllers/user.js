@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const { use } = require('../routes/post');
+const formidable = require('formidable');
+const fs = require('fs');
 const _ = require('lodash');
 
 exports.userById = (req, res, next, id) => {
@@ -41,21 +43,53 @@ exports.getUser = (req, res) => {
     return res.json(req.profile);
 }
 
-exports.updateUser = (req, res) => {
-    let user = req.profile;
-    console.log(req.body);
-    user = _.extend(user, req.body);
-    user.updated = Date.now();
+// exports.updateUser = (req, res) => {
+//     let user = req.profile;
+//     console.log(req.body);
+//     user = _.extend(user, req.body);
+//     user.updated = Date.now();
 
-    user.save((err, user) => {
+//     user.save((err, user) => {
+//         if (err) {
+//             return res.status(400).json({error: 'You are not authorized to perform this action.'});
+//         }
+
+//         user.hashed_password = undefined;
+//         user.salt = undefined;
+
+//         res.json({user});
+//     })
+// }
+
+exports.updateUser = (req, res, next) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
         if (err) {
-            return res.status(400).json({error: 'You are not authorized to perform this action.'});
+            return res.status(400).json({
+                error: 'There are some error while updating user.'
+            });
+        }
+        // save user
+        let user = req.profile;
+        user = _.extend(user, fields);
+        user.updated = Date.now();
+
+        if (files.photo) {
+            user.photo.data = fs.readFileSync(files.photo.path);
+            user.photo.contentType = files.photo.type;
         }
 
-        user.hashed_password = undefined;
-        user.salt = undefined;
-
-        res.json({user});
+        user.save((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            result.hashed_password = undefined;
+            result.salt = undefined;
+            res.json(result);
+        });
     })
 }
 
