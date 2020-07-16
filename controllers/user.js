@@ -43,6 +43,16 @@ exports.getUser = (req, res) => {
     return res.json(req.profile);
 }
 
+exports.userPhoto = (req, res, next) => {
+    if (req.profile.photo.data) {
+        res.set('Content-type', req.profile.photo.contentType);
+        return res.send(req.profile.photo.data);
+    } else {
+        console.log("Profile photo not found.");
+        res.status(404).json({error: 'Profile photo not found.'});
+    }
+}
+
 // exports.updateUser = (req, res) => {
 //     let user = req.profile;
 //     console.log(req.body);
