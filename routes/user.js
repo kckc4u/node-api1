@@ -5,7 +5,11 @@ const {
     getUser, 
     updateUser, 
     deleteUser, 
-    userPhoto } = require('../controllers/user');
+    userPhoto,
+    addFollower,
+    addFollowing,
+    removeFollower,
+    removeFollowing } = require('../controllers/user');
 const { requireAuthentication } = require('../controllers/auth');
 const router = express.Router();
 
@@ -16,6 +20,10 @@ router.get('/user/:userId', requireAuthentication, getUser);
 router.get('/user/photo/:userId', userPhoto);
 
 router.put('/user/:userId', requireAuthentication, updateUser);
+
+router.put('/user/follow', requireAuthentication, addFollowing, addFollower);
+
+router.put('/user/unfollow', requireAuthentication, removeFollowing, removeFollower);
 
 router.delete('/user/:userId', requireAuthentication, deleteUser);
 

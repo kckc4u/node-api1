@@ -5,7 +5,10 @@ const fs = require('fs');
 const _ = require('lodash');
 
 exports.userById = (req, res, next, id) => {
-    User.findById(id).exec((err, user) => {
+    User.findById(id)
+    .populate('followers', '_id name')
+    .populate('following', '_id name')
+    .exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: "User not found."
@@ -117,3 +120,69 @@ exports.deleteUser = (req, res) => {
         });
     })
 }
+
+// Add Follow
+exports.addFollower = (req, res) => {
+    User.findByIdAndUpdate(
+        req.body.followId,
+        {'$push': {'followers': req.body.userId}},
+        {new: true}
+    )
+    .populate('followers', '_id name')
+    .populate('following', '_id name')
+    .exec((err, user) => {
+        if (err) return res.status(400).json({error: err});
+
+        user.hashed_password = undefined;
+        user.salt = undefined;
+        res.json(user);
+    })
+    
+}
+
+exports.addFollowing = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.userId, 
+        {'$push': {'following': req.body.followId}},
+        (err, result) => {
+            if (err) {
+                return res.status(400).json({error: "Not able to update."})
+            }
+
+            next();
+        }
+        );
+};
+
+// remove follow
+exports.removeFollower = (req, res) => {
+    User.findByIdAndUpdate(
+        req.body.followId,
+        {'$pull': {'followers': req.body.userId}},
+        {new: true}
+    )
+    .populate('followers', '_id name')
+    .populate('following', '_id name')
+    .exec((err, user) => {
+        if (err) return res.status(400).json({error: err});
+
+        user.hashed_password = undefined;
+        user.salt = undefined;
+        res.json(user);
+    })
+    
+}
+
+exports.removeFollowing = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.userId, 
+        {'$pull': {'following': req.body.followId}},
+        (err, result) => {
+            if (err) {
+                return res.status(400).json({error: "Not able to update."})
+            }
+
+            next();
+        }
+        );
+};

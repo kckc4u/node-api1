@@ -29,7 +29,13 @@ let userSchema = new mongoose.Schema({
     photo: {
         data: Buffer,
         contentType: String,
-    }
+    },
+    about: {
+        type: String,
+        trim: true
+    },
+    following: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    followers: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}]
 });
 
 // virtual field
