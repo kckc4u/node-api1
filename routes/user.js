@@ -19,11 +19,11 @@ router.get('/user/:userId', requireAuthentication, getUser);
 
 router.get('/user/photo/:userId', userPhoto);
 
-router.put('/user/:userId', requireAuthentication, updateUser);
-
 router.put('/user/follow', requireAuthentication, addFollowing, addFollower);
 
 router.put('/user/unfollow', requireAuthentication, removeFollowing, removeFollower);
+
+router.put('/user/:userId', requireAuthentication, updateUser);
 
 router.delete('/user/:userId', requireAuthentication, deleteUser);
 

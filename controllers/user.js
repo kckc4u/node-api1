@@ -8,13 +8,13 @@ exports.userById = (req, res, next, id) => {
     User.findById(id)
     .populate('followers', '_id name')
     .populate('following', '_id name')
-    .exec((err, user) => {
-        if (err || !user) {
+    .exec((err, usr) => {
+        if (err || !usr) {
             return res.status(400).json({
-                error: "User not found."
+                error: `User: ${id} not found.`
             });
         }
-        req.profile = user;
+        req.profile = usr;
         
         next();
     })
@@ -148,10 +148,9 @@ exports.addFollowing = (req, res, next) => {
             if (err) {
                 return res.status(400).json({error: "Not able to update."})
             }
-
             next();
         }
-        );
+    );
 };
 
 // remove follow
