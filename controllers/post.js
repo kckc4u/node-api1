@@ -13,7 +13,8 @@ exports.getPosts = (req, res) => {
     // select only few of elements
     Post.find()
     .populate("postedBy", "_id name")
-    .select("_id title postedBy")
+    .select("_id title postedBy created")
+    .sort({"created": "desc"})
     .then((posts => {
         res.json({posts});
     }))
@@ -34,6 +35,15 @@ exports.getPostById = (req, res, next, id) => {
         req.post = post;
         next();
     })
+}
+
+exports.getPhoto = (req, res, next) => {
+    if (req.post.photo.data) {
+        res.set('Content-type', req.post.photo.contentType);
+        return res.send(req.post.photo.data);
+    } 
+
+    return res.status(404).json({error: 'Post photo not found.'});
 }
 
 exports.isPoster = (req, res, next) => {

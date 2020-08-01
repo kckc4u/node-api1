@@ -1,4 +1,12 @@
-const {getPosts, createPost, getPostsByUser, getPostById, deletePost, isPoster, updatePost} = require('../controllers/post');
+const { getPosts, 
+        createPost, 
+        getPostsByUser, 
+        getPostById, 
+        deletePost, 
+        isPoster, 
+        updatePost,
+        getPhoto
+    } = require('../controllers/post');
 const validator = require('../validators');
 const express = require('express');
 const {requireAuthentication} = require('../controllers/auth');
@@ -11,6 +19,8 @@ let router = express.Router();
 router.get('/', getPosts);
 
 router.post('/add/:userId', requireAuthentication, createPost, validator.validatePost);
+
+router.get('/photo/:postId', getPhoto);
 
 router.get('/by/:userId', requireAuthentication, getPostsByUser);
 
