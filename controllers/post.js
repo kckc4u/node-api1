@@ -13,7 +13,7 @@ exports.getPosts = (req, res) => {
     // select only few of elements
     Post.find()
     .populate("postedBy", "_id name")
-    .select("_id title postedBy created")
+    .select("_id title postedBy created body")
     .sort({"created": "desc"})
     .then((posts => {
         res.json({posts});
@@ -84,6 +84,7 @@ exports.getPostsByUser = (req, res) => {
     Post.find({postedBy: req.profile._id})
     .populate("postedBy", "_id name")
     .sort("created")
+    .select("_id title body created")
     .exec((err, posts) => {
         if(err) {
             return res.status(400).json({error: err});
@@ -91,6 +92,7 @@ exports.getPostsByUser = (req, res) => {
 
         return res.json({posts});
     })
+    
 }
 
 exports.createPost = (req, res) => {
