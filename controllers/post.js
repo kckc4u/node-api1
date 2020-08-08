@@ -80,6 +80,10 @@ exports.deletePost = (req, res) => {
     );
 }
 
+exports.singlePost = (req, res) => {
+    return res.json(req.post);
+}
+
 exports.getPostsByUser = (req, res) => {
     Post.find({postedBy: req.profile._id})
     .populate("postedBy", "_id name")

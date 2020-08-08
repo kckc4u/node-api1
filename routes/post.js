@@ -5,7 +5,8 @@ const { getPosts,
         deletePost, 
         isPoster, 
         updatePost,
-        getPhoto
+        getPhoto,
+        singlePost
     } = require('../controllers/post');
 const validator = require('../validators');
 const express = require('express');
@@ -18,11 +19,11 @@ let router = express.Router();
 // Authorization: Bearer [token]
 router.get('/', getPosts);
 
-router.post('/add/:userId', requireAuthentication, createPost, validator.validatePost);
-
+router.get('/:postId', singlePost);
 router.get('/photo/:postId', getPhoto);
-
 router.get('/by/:userId', requireAuthentication, getPostsByUser);
+
+router.post('/add/:userId', requireAuthentication, createPost, validator.validatePost);
 
 router.delete('/:postId', requireAuthentication, isPoster, deletePost);
 
