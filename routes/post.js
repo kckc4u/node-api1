@@ -6,7 +6,9 @@ const { getPosts,
         isPoster, 
         updatePost,
         getPhoto,
-        singlePost
+        singlePost,
+        like,
+        unlike
     } = require('../controllers/post');
 const validator = require('../validators');
 const express = require('express');
@@ -14,6 +16,10 @@ const {requireAuthentication} = require('../controllers/auth');
 const {userById} = require('../controllers/user');
 
 let router = express.Router();
+
+// like unlike
+router.put('/post/like', requireSignin, like);
+router.put('/post/unlike', requireSignin, unlike);
 
 // To get authorize send "Authorization" key in header and Bearer <JWT token> as value
 // Authorization: Bearer [token]
@@ -28,6 +34,8 @@ router.post('/add/:userId', requireAuthentication, createPost, validator.validat
 router.delete('/:postId', requireAuthentication, isPoster, deletePost);
 
 router.put('/:postId', requireAuthentication, isPoster, updatePost);
+
+// router.put('/:postId', requireAuthentication, isPoster, updatePost);
 // Anytime when :userId coming as parameter with any request execute following handler
 router.param('userId', userById);
 router.param('postId', getPostById);

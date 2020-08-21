@@ -161,21 +161,33 @@ exports.createPost = (req, res) => {
         })
     });
 
-    // let postData = req.body;
-    // let post = new Post(postData);
-
-    // post.save((err, post) => {
-    //     if (err) {
-    //         return res.status(400).json({
-    //             error: err
-    //         });
-    //     } 
-
-    //     res.status(200).json(post);
-    // });
-
-    // post.save()
-    // .then((result) => {
-    //     res.status(200).json({post: result});
-    // })
+    exports.like = (req, res) => {
+        Post.findByIdAndUpdate(req.body.postId, { $push: { likes: req.body.userId } }, { new: true })
+        .exec(
+            (err, result) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: err
+                    });
+                } else {
+                    res.json(result);
+                }
+            }
+        );
+    };
+    
+    exports.unlike = (req, res) => {
+        Post.findByIdAndUpdate(req.body.postId, { $pull: { likes: req.body.userId } }, { new: true })
+        .exec(
+            (err, result) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: err
+                    });
+                } else {
+                    res.json(result);
+                }
+            }
+        );
+    };
 }
