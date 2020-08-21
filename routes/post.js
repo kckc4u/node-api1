@@ -18,8 +18,8 @@ const {userById} = require('../controllers/user');
 let router = express.Router();
 
 // like unlike
-router.put('/post/like', requireSignin, like);
-router.put('/post/unlike', requireSignin, unlike);
+router.put('/like', requireSignin, like);
+router.put('/unlike', requireSignin, unlike);
 
 // To get authorize send "Authorization" key in header and Bearer <JWT token> as value
 // Authorization: Bearer [token]
